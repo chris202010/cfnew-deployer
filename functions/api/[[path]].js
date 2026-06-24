@@ -482,6 +482,16 @@ async function 绑定域名(凭据, 选项, 记录) {
       body: { name: 选项.hostname }
     });
     记录(`Pages 域名已绑定: ${选项.hostname}`);
+    // 自动创建 CNAME 记录指向 Pages 项目，同账号域名可自动通过验证
+    try {
+      await 调用接口(凭据, `/zones/${选项.zoneId}/dns_records`, {
+        method: 'POST',
+        body: { type: 'CNAME', name: 选项.hostname, content: `${选项.projectName}.pages.dev`, proxied: true }
+      });
+      记录(`CNAME 记录已创建: ${选项.hostname} → ${选项.projectName}.pages.dev`);
+    } catch (dns错误) {
+      记录(`CNAME 记录创建跳过(可能已存在): ${dns错误.message}`);
+    }
     return { hostname: 结果.name || 选项.hostname, type: 'pages' };
   }
   const 请求体 = {
