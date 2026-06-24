@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - run: npm run pack:upload
       - run: npx wrangler pages deploy public --project-name deploy-panel --branch main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
