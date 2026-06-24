@@ -23,11 +23,13 @@ jobs:
       - run: npm ci
 
       # 1️⃣ 生成 zip
+
       - run: npm run pack:upload
 
-      # 2️⃣ 读取 package.json 版本号（用于 tag）
       - id: version
-        run: echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       # 3️⃣ 创建 GitHub Release + 上传 zip
       - name: Create Release
